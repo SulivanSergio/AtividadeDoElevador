@@ -1,4 +1,6 @@
 package W5;
+import java.util.Random;
+
 import javax.swing.*;
 
 public class Predio extends JFrame {
@@ -9,21 +11,31 @@ public class Predio extends JFrame {
 	
 	
 	ImageIcon imagem = new ImageIcon(getClass().getResource("andar.png"));
-	ImageIcon elev = new ImageIcon(getClass().getResource("elevadorVermelho.png"));
-	JLabel labelElevador = new JLabel(elev);
+	ImageIcon imagemElevador = new ImageIcon(getClass().getResource("elevadorVermelho.png"));
+	ImageIcon imagemPessoa = new ImageIcon(getClass().getResource("passageiro.png"));
 	
+	//ELEVADOR E PESSOAS
+	JLabel labelElevador = new JLabel(imagemElevador);
+	//JLabel labelPessoa = new JLabel(imagemPessoa);
+	
+	//ANDARES
 	JLabel label = new JLabel(imagem);
 	JLabel label1 = new JLabel(imagem);
 	JLabel label2 = new JLabel(imagem);
 	JLabel label3 = new JLabel(imagem);
-	
 	JLabel label4 = new JLabel(imagem);
 	JLabel label5 = new JLabel(imagem);
 	JLabel label6 = new JLabel(imagem);
 	JLabel label7 = new JLabel(imagem);
 	
-	static Elevador e;
 	
+	static Elevador elevador;
+	static Pessoa pessoa[];
+	
+	static int MAX = 3;
+	Random random = new Random();
+	
+	JLabel labelPessoa[] = new JLabel[MAX];
 	
 	public Predio()
 	{
@@ -32,6 +44,13 @@ public class Predio extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(this);
 		setVisible(true);
+		
+		for(int i = 0; i < MAX; i++)
+		{
+			
+			labelPessoa[i] = new JLabel(imagemPessoa);
+			
+		}
 		
 		
 	}
@@ -48,8 +67,15 @@ public class Predio extends JFrame {
 		add(label7);
 		
 		add(labelElevador);
-				
-				
+		//add(labelPessoa);	
+		for(int i = 0; i < MAX; i++)
+		{
+			
+			add(labelPessoa[i]);
+			
+		}
+		
+		
 		label.setBounds(0, 0, 300, 20);
 		label1.setBounds(0, 170, 300, 20);
 		label2.setBounds(0, 350, 300, 20);
@@ -70,8 +96,56 @@ public class Predio extends JFrame {
 		Predio p = new Predio();
 		p.Desenha();
 		
-		e = new Elevador(p.labelElevador);
-		e.start();
+		
+		
+		pessoa = new Pessoa[MAX];
+		elevador = new Elevador(p.labelElevador,pessoa);
+		
+		for(int i = 0; i < MAX ; i++)
+		{
+			
+			pessoa[i] = new Pessoa(p.labelPessoa[i],p.ChoiceFloor(),p.ChoiceFloor(), i);
+			
+			pessoa[i].Start();
+			
+			
+		}
+		elevador.start();
+		
+		
+		
+		
+		
+		
 	}
-
+	
+	private FLOOR ChoiceFloor()
+	{
+		FLOOR floor = FLOOR.PRIMEIRO;
+		int r = random.nextInt(3);
+		
+		
+		switch(r)
+		{
+		case 0:
+			floor = FLOOR.PRIMEIRO;
+			break;
+		case 1:
+			floor = FLOOR.SEGUNDO;
+			break;
+		case 2:
+			floor = FLOOR.TERCEIRO;
+			break;
+		}
+		
+		return floor;
+		
+	
+		
+		
+		
+		
+		
+	}
+	
 }

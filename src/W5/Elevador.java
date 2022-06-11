@@ -13,15 +13,26 @@ public class Elevador extends Thread{
 	private float positionX = 400;
 	private float positionY = 300;
 	private float speed = 60;
+	private int idPerson = -1;
+	
+	public boolean full = false;
+	public boolean choice = false;
 	
 	public STATE state = STATE.UP;
-	public FLOOR floor = FLOOR.PRIMEIRO;
-	public FLOOR floorDestiny = FLOOR.QUARTO;
-	public Elevador(JLabel elevador) {
+	public FLOOR floor = FLOOR.SEGUNDO;
+	public FLOOR floorDestiny = FLOOR.TERCEIRO;
+	
+	Pessoa pessoa[];
+	
+	
+	public Elevador(JLabel elevador, Pessoa pessoa[]) {
 		
 		
 		this.elevador = elevador;
 		this.elevador.setIcon(elevVerde);
+		this.pessoa = pessoa;
+		
+		
 		
 		this.elevador.setBounds((int)this.positionX - 50, (int)this.positionY - 75, 100, 150);
 		
@@ -62,12 +73,9 @@ public class Elevador extends Thread{
 		
 	}
 
-
-
-
 	private void Render() {
 		
-		
+		this.elevador.setBounds((int)this.positionX - 50, (int)this.positionY - 75, 100, 150);
 	}
 
 	private void Update(float deltaTime) {
@@ -77,13 +85,21 @@ public class Elevador extends Thread{
 		ChangeFloor();
 		UpdateFloor();
 		
-		if(this.floor == FLOOR.TERCEIRO)
+		if(this.choice == false)
 		{
-			this.floorDestiny = FLOOR.PRIMEIRO;
-			
+			ChoicePerson();
+		}
+		if(this.full == true)
+		{
+			UpdatePerson();
+			FecharPorta();
+		}
+		if(idPerson != -1)
+		{
+			EnterPerson();
+			QuitPerson();
 		}
 		
-		this.elevador.setBounds((int)this.positionX - 50, (int)this.positionY - 75, 100, 150);
 	}
 
 	private void Input() {
@@ -91,23 +107,6 @@ public class Elevador extends Thread{
 		
 	}
 
-	
-	private void ChangeState()
-	{
-		switch(this.state)
-		{
-			case UP:
-				this.state = STATE.DOWN;
-				break;
-			case DOWN:
-				this.state = STATE.UP;
-				break;
-		default:
-			break;
-		}
-		
-	}
-	
 	private void UpdateState(float deltaTime)
 	{
 		switch(this.state)
@@ -124,6 +123,7 @@ public class Elevador extends Thread{
 		}
 		
 	}
+	
 	private void ChangeFloor()
 	{
 		
@@ -198,21 +198,91 @@ public class Elevador extends Thread{
 			this.floor = FLOOR.SEGUNDO;
 			
 		}
-		if(this.positionY < 80 && this.positionY > 50)
+		if(this.positionY < 90 && this.positionY > 50)
 		{
 			this.floor = FLOOR.TERCEIRO;
 		}
 		
-		if( this.positionY < 10)
+		if( this.positionY < 80)
 		{
 			this.state = STATE.REST;  
 		}
-		if( this.positionY > 540)
+		if( this.positionY > 460)
 		{
 			this.state = STATE.REST;  
 		}
 		
 		 
 	}
+	
+	private void ChoicePerson()
+	{
+		
+		try{
+				
+			
+			for(int i = 0; i < pessoa.length; i++)
+			{
+				
+				if(pessoa[i].floor != pessoa[i].floorDestiny)
+				{
+					
+					this.floorDestiny = pessoa[i].floor;
+					this.idPerson = pessoa[i].id;
+					
+					this.choice = true;
+					return;
+					
+				}
+				
+				
+			}
+		}
+		catch(Exception e) {
+			
+		}
+		
+	}
+	
+	private void UpdatePerson()
+	{
+		this.pessoa[idPerson].SetPosition(this.positionX, this.positionY);;
+		
+		
+	}
+	private void EnterPerson()
+	{
+		if(this.floor == this.floorDestiny)
+		{
+			
+			this.floorDestiny = this.pessoa[idPerson].floorDestiny;
+			this.full = true;
+			
+		}
+		
+	}
+	private void QuitPerson()
+	{
+		if(this.floor == this.pessoa[idPerson].floorDestiny)
+		{
+			this.pessoa[idPerson].floor = this.floorDestiny;
+			this.pessoa[idPerson].SetFloor();
+			this.full = false;
+			this.choice = true;
+			AbrirPorta();
+		}
+		
+	}
+	
+	private void AbrirPorta()
+	{
+		this.elevador.setIcon(elevVerde);
+	}
+	
+	private void FecharPorta()
+	{
+		this.elevador.setIcon(elevVermelho);
+	}
+	
 	
 }
