@@ -10,29 +10,31 @@ public class Pessoa extends Thread {
 	
 	FLOOR floorDestiny;
 	FLOOR floor;
+	LR lr;
 	public int id;
 	private float positionX = 400;
 	private float positionY = 300;
 	private int contador = 0;
+	public boolean finish = true;
 	
-	public Pessoa(JLabel pessoa,FLOOR floor,FLOOR floorDestiny, int id)
+	public Pessoa(JLabel pessoa,FLOOR floor,FLOOR floorDestiny, LR lr,int id)
 	{
 		
 		this.pessoa = pessoa;
 		this.floor = floor;
 		this.floorDestiny = floorDestiny;
 		this.id = id;
-		
+		this.lr = lr;
 	}
 
 
-	@Override
+	
 	public void run() {
 		
-		
+		System.out.println("Thread pessoa antes: " + id);
 		Start();
 		
-		
+		System.out.println("Thread pessoa depois: " + id);
 	}
 	
 	public void Start()
@@ -41,7 +43,7 @@ public class Pessoa extends Thread {
 		float deltaTime = 0;
 		
 		
-		while(true)
+		while(finish)
 		{
 			long start = System.currentTimeMillis();
 			
@@ -90,15 +92,41 @@ public class Pessoa extends Thread {
 		switch(this.floor)
 		{
 		case PRIMEIRO:
-			this.positionX = 250;
+			switch(this.lr)
+			{
+			case LEFT:
+				this.positionX = 250;
+				break;
+			case RIGHT:
+				this.positionX = 500;
+				break;
+			}
 			this.positionY = 460;
 			break;
 		case SEGUNDO:
-			this.positionX = 250;
+			switch(this.lr)
+			{
+			case LEFT:
+				this.positionX = 250;
+				break;
+			case RIGHT:
+				this.positionX = 500;
+				break;
+			}
+			
 			this.positionY = 270;
 			break;
 		case TERCEIRO:
-			this.positionX = 250;
+			switch(this.lr)
+			{
+			case LEFT:
+				this.positionX = 250;
+				break;
+			case RIGHT:
+				this.positionX = 500;
+				break;
+			}
+			
 			this.positionY = 90;
 			break;
 			
@@ -117,6 +145,13 @@ public class Pessoa extends Thread {
 		this.positionX = positionX;
 		this.positionY = positionY;
 		
+		
+	}
+	
+	public void SetFinish()
+	{
+		
+		finish = false;
 		
 	}
 	

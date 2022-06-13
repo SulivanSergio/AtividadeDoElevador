@@ -30,7 +30,8 @@ public class Predio extends JFrame {
 	
 	
 	static Elevador elevador;
-	static Pessoa pessoa[];
+	Pessoa pessoa[];
+	
 	
 	static int MAX = 3;
 	Random random = new Random();
@@ -45,12 +46,7 @@ public class Predio extends JFrame {
 		setLocationRelativeTo(this);
 		setVisible(true);
 		
-		for(int i = 0; i < MAX; i++)
-		{
-			
-			labelPessoa[i] = new JLabel(imagemPessoa);
-			
-		}
+		
 		
 		
 	}
@@ -67,12 +63,11 @@ public class Predio extends JFrame {
 		add(label7);
 		
 		add(labelElevador);
-		//add(labelPessoa);	
-		for(int i = 0; i < MAX; i++)
+		
+		for(int i = 0; i< MAX; i++)
 		{
-			
+			labelPessoa[i] = new JLabel(imagemPessoa);
 			add(labelPessoa[i]);
-			
 		}
 		
 		
@@ -97,22 +92,17 @@ public class Predio extends JFrame {
 		p.Desenha();
 		
 		
-		
-		pessoa = new Pessoa[MAX];
-		elevador = new Elevador(p.labelElevador,pessoa);
-		
+		p.pessoa = new Pessoa[MAX];
+	
 		for(int i = 0; i < MAX ; i++)
 		{
+			p.pessoa[i] = new Pessoa(p.labelPessoa[i],p.ChoiceFloor(),p.ChoiceFloor(),p.ChoiceLR() ,i);
 			
-			pessoa[i] = new Pessoa(p.labelPessoa[i],p.ChoiceFloor(),p.ChoiceFloor(), i);
-			
-			pessoa[i].Start();
-			
-			
+			p.pessoa[i].start();
 		}
+		
+		elevador = new Elevador(p.labelElevador,p.pessoa);
 		elevador.start();
-		
-		
 		
 		
 		
@@ -137,14 +127,29 @@ public class Predio extends JFrame {
 			floor = FLOOR.TERCEIRO;
 			break;
 		}
-		
+		System.out.println(floor);
 		return floor;
 		
-	
 		
+	}
+
+	private LR ChoiceLR()
+	{
+		LR lr = LR.LEFT;
+		int r = random.nextInt(2);
 		
+		switch(r)
+		{
+		case 0:
+			lr = LR.LEFT;
+			break;
+		case 1:
+			lr = LR.RIGHT;
+			break;
 		
+		}
 		
+		return lr;
 		
 	}
 	

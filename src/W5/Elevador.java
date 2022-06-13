@@ -182,6 +182,7 @@ public class Elevador extends Thread{
 				break;
 			
 			default:
+				
 				break;
 		}
 	}
@@ -205,11 +206,13 @@ public class Elevador extends Thread{
 		
 		if( this.positionY < 80)
 		{
-			this.state = STATE.REST;  
+			this.state = STATE.REST;
+			
 		}
 		if( this.positionY > 460)
 		{
-			this.state = STATE.REST;  
+			this.state = STATE.REST;
+			
 		}
 		
 		 
@@ -218,29 +221,22 @@ public class Elevador extends Thread{
 	private void ChoicePerson()
 	{
 		
-		try{
-				
+	
+		for(int i = 0; i < pessoa.length; i++)
+		{
 			
-			for(int i = 0; i < pessoa.length; i++)
+			if(pessoa[i].floor != pessoa[i].floorDestiny)
 			{
 				
-				if(pessoa[i].floor != pessoa[i].floorDestiny)
-				{
-					
-					this.floorDestiny = pessoa[i].floor;
-					this.idPerson = pessoa[i].id;
-					
-					this.choice = true;
-					return;
-					
-				}
-				
+				this.floorDestiny = pessoa[i].floor;
+				this.idPerson = pessoa[i].id;
+				this.choice = true;
+				return;
 				
 			}
-		}
-		catch(Exception e) {
 			
 		}
+	
 		
 	}
 	
@@ -248,10 +244,10 @@ public class Elevador extends Thread{
 	{
 		this.pessoa[idPerson].SetPosition(this.positionX, this.positionY);;
 		
-		
 	}
 	private void EnterPerson()
 	{
+		
 		if(this.floor == this.floorDestiny)
 		{
 			
@@ -263,13 +259,16 @@ public class Elevador extends Thread{
 	}
 	private void QuitPerson()
 	{
+		
 		if(this.floor == this.pessoa[idPerson].floorDestiny)
 		{
 			this.pessoa[idPerson].floor = this.floorDestiny;
 			this.pessoa[idPerson].SetFloor();
+			//this.pessoa[idPerson].SetFinish();
 			this.full = false;
-			this.choice = true;
+			this.choice = false;
 			AbrirPorta();
+			
 		}
 		
 	}
