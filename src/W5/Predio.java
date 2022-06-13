@@ -15,7 +15,7 @@ public class Predio extends JFrame {
 	ImageIcon imagemPessoa = new ImageIcon(getClass().getResource("passageiro.png"));
 	
 	//ELEVADOR E PESSOAS
-	JLabel labelElevador = new JLabel(imagemElevador);
+	JLabel labelElevador[] = new JLabel[2];
 	//JLabel labelPessoa = new JLabel(imagemPessoa);
 	
 	//ANDARES
@@ -29,11 +29,11 @@ public class Predio extends JFrame {
 	JLabel label7 = new JLabel(imagem);
 	
 	
-	static Elevador elevador;
+	Elevador elevador[];
 	Pessoa pessoa[];
 	
 	
-	static int MAX = 3;
+	static int MAX = 5;
 	Random random = new Random();
 	
 	JLabel labelPessoa[] = new JLabel[MAX];
@@ -62,7 +62,15 @@ public class Predio extends JFrame {
 		add(label6);
 		add(label7);
 		
-		add(labelElevador);
+		
+		
+		
+		for(int i = 0; i< 2; i++)
+		{
+			labelElevador[i] = new JLabel(imagemElevador);
+			add(labelElevador[i]);
+		}
+		
 		
 		for(int i = 0; i< MAX; i++)
 		{
@@ -93,17 +101,21 @@ public class Predio extends JFrame {
 		
 		
 		p.pessoa = new Pessoa[MAX];
-	
-		for(int i = 0; i < MAX ; i++)
+		p.elevador = new Elevador[2];
+		
+		for(int i = 0; i < p.pessoa.length ; i++)
 		{
+			
 			p.pessoa[i] = new Pessoa(p.labelPessoa[i],p.ChoiceFloor(),p.ChoiceFloor(),p.ChoiceLR() ,i);
 			
 			p.pessoa[i].start();
 		}
 		
-		elevador = new Elevador(p.labelElevador,p.pessoa);
-		elevador.start();
-		
+		for(int i = 0; i < p.elevador.length ; i++)
+		{
+			p.elevador[i] = new Elevador(p.labelElevador[i],p.pessoa, i);
+			p.elevador[i].start();
+		}
 		
 		
 		

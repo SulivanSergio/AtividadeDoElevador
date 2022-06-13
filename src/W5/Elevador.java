@@ -1,5 +1,8 @@
 package W5;
 
+
+import java.util.concurrent.Semaphore;
+
 import javax.swing.*;
 
 
@@ -14,6 +17,7 @@ public class Elevador extends Thread{
 	private float positionY = 300;
 	private float speed = 60;
 	private int idPerson = -1;
+	private int id = -1;
 	
 	public boolean full = false;
 	public boolean choice = false;
@@ -24,14 +28,16 @@ public class Elevador extends Thread{
 	
 	Pessoa pessoa[];
 	
+	static Semaphore semaforo = new Semaphore(1);
 	
-	public Elevador(JLabel elevador, Pessoa pessoa[]) {
+	
+	public Elevador(JLabel elevador, Pessoa pessoa[], int id) {
 		
 		
 		this.elevador = elevador;
 		this.elevador.setIcon(elevVerde);
 		this.pessoa = pessoa;
-		
+		this.id = id;
 		
 		
 		this.elevador.setBounds((int)this.positionX - 50, (int)this.positionY - 75, 100, 150);
@@ -43,7 +49,7 @@ public class Elevador extends Thread{
 
 	@Override
 	public void run() {
-		
+		System.out.println("Elevador: " + this.id);
 		Start();
 	}
 	
@@ -85,10 +91,19 @@ public class Elevador extends Thread{
 		ChangeFloor();
 		UpdateFloor();
 		
+		try {
+			semaforo.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(this.choice == false)
 		{
 			ChoicePerson();
+			//System.out.println("Elevador: " + this.id + "Pessoa: "+ this.idPerson);
 		}
+		semaforo.release();
+		
 		if(this.full == true)
 		{
 			UpdatePerson();
@@ -118,7 +133,7 @@ public class Elevador extends Thread{
 				this.positionY += speed * deltaTime;
 				break;
 			case REST:
-				
+				ChangeFloor();
 				break;
 		}
 		
@@ -225,11 +240,12 @@ public class Elevador extends Thread{
 		for(int i = 0; i < pessoa.length; i++)
 		{
 			
-			if(pessoa[i].floor != pessoa[i].floorDestiny)
+			if(pessoa[i].floor != pessoa[i].floorDestiny && this.pessoa[i].escolhido != true)
 			{
 				
 				this.floorDestiny = pessoa[i].floor;
 				this.idPerson = pessoa[i].id;
+				this.pessoa[i].escolhido = true;
 				this.choice = true;
 				return;
 				
@@ -264,9 +280,10 @@ public class Elevador extends Thread{
 		{
 			this.pessoa[idPerson].floor = this.floorDestiny;
 			this.pessoa[idPerson].SetFloor();
-			//this.pessoa[idPerson].SetFinish();
+			
 			this.full = false;
 			this.choice = false;
+			this.pessoa[idPerson].SetFinish();
 			AbrirPorta();
 			
 		}

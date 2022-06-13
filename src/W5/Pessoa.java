@@ -12,6 +12,7 @@ public class Pessoa extends Thread {
 	FLOOR floor;
 	LR lr;
 	public int id;
+	public boolean escolhido = false;
 	private float positionX = 400;
 	private float positionY = 300;
 	private int contador = 0;
@@ -25,6 +26,7 @@ public class Pessoa extends Thread {
 		this.floorDestiny = floorDestiny;
 		this.id = id;
 		this.lr = lr;
+		
 	}
 
 
