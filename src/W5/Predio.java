@@ -105,8 +105,11 @@ public class Predio extends JFrame {
 		
 		for(int i = 0; i < p.pessoa.length ; i++)
 		{
-			
-			p.pessoa[i] = new Pessoa(p.labelPessoa[i],p.ChoiceFloor(),p.ChoiceFloor(),p.ChoiceLR() ,i);
+			FLOOR floor = FLOOR.PRIMEIRO;
+			FLOOR floor2 = FLOOR.PRIMEIRO;
+			floor = p.ChoiceFloor();
+			floor2 = p.ChoiceFloorDestiny(floor);
+			p.pessoa[i] = new Pessoa(p.labelPessoa[i],floor,floor2,p.ChoiceLR() ,i);
 			
 			p.pessoa[i].start();
 		}
@@ -139,7 +142,57 @@ public class Predio extends JFrame {
 			floor = FLOOR.TERCEIRO;
 			break;
 		}
-		System.out.println(floor);
+		
+		return floor;
+		
+		
+	}
+	private FLOOR ChoiceFloorDestiny(FLOOR floor)
+	{
+		
+		int r = random.nextInt(2);
+		
+		
+		switch(floor)
+		{
+		case PRIMEIRO:
+			switch(r)
+			{
+			case 0:
+				floor = FLOOR.TERCEIRO;
+				break;
+			case 1:
+				floor = FLOOR.SEGUNDO;
+				break;
+			
+			}
+			break;
+		case SEGUNDO:
+			switch(r)
+			{
+			case 0:
+				floor = FLOOR.PRIMEIRO;
+				break;
+			case 1:
+				floor = FLOOR.TERCEIRO;
+				break;
+			
+			}
+			break;
+		case TERCEIRO:
+			switch(r)
+			{
+			case 0:
+				floor = FLOOR.PRIMEIRO;
+				break;
+			case 1:
+				floor = FLOOR.SEGUNDO;
+				break;
+			
+			}
+			break;
+		}
+		
 		return floor;
 		
 		

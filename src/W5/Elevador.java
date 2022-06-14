@@ -107,7 +107,7 @@ public class Elevador extends Thread{
 		if(this.full == true)
 		{
 			UpdatePerson();
-			FecharPorta();
+			ElevadorCheio();
 		}
 		if(idPerson != -1)
 		{
@@ -284,18 +284,18 @@ public class Elevador extends Thread{
 			this.full = false;
 			this.choice = false;
 			this.pessoa[idPerson].SetFinish();
-			AbrirPorta();
+			ElevadorVazio();
 			
 		}
 		
 	}
 	
-	private void AbrirPorta()
+	private void ElevadorVazio()
 	{
 		this.elevador.setIcon(elevVerde);
 	}
 	
-	private void FecharPorta()
+	private void ElevadorCheio()
 	{
 		this.elevador.setIcon(elevVermelho);
 	}
